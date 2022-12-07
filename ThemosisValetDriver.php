@@ -1,5 +1,7 @@
 <?php
 
+use Valet\Drivers\BasicValetDriver;
+
 class ThemosisValetDriver extends BasicValetDriver
 {
     /**

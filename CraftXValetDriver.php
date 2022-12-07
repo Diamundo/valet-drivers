@@ -1,5 +1,7 @@
 <?php
 
+use Valet\Drivers\ValetDriver;
+
 class CraftXValetDriver extends ValetDriver
 {
     //from: https://github.com/laravel/valet/blob/master/cli/drivers/CraftValetDriver.php
