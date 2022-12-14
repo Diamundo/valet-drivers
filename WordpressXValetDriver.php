@@ -31,24 +31,28 @@ class WordpressXValetDriver extends ValetDriver
      */
     public function isStaticFile($sitePath, $siteName, $uri)
     {
-        if(strpos($uri, '/app/wp-') !== false) {
-            if (is_file($staticFilePath = $sitePath.'/public/'.$uri)) {                
-                return $staticFilePath;
-            }
-            if (is_file($staticFilePath = $sitePath.'/public_html/'.$uri)) {                
-                return $staticFilePath;
-            }
-            return false;
-        }
-
-        if(strpos($uri, '/wp-') !== false) {
-            if (is_file($staticFilePath = $sitePath.$uri)) {                
-                return $staticFilePath;
-            }
-            return false;
-        }
-
-
+		
+		$options = [
+			'/app/wp-' => [
+				'/public/',
+				'/public_html/',
+			],
+			'/wp-' => [
+				'',
+			],
+		];
+		
+		foreach($options as $key => $value) {
+	        if(strpos($uri, $key) !== false) {
+				foreach($value as $folder) {
+		            if (is_file($staticFilePath = $sitePath.$folder.$uri)) {
+		                return $staticFilePath;
+		            }
+				}
+	            return false;
+	        }
+		}
+		
         $options = [
             '',
             '/public/',
@@ -82,20 +86,20 @@ class WordpressXValetDriver extends ValetDriver
              $prefix = '/public_html';
         }
 
-        if(strpos($uri, '/app/wp-') !== false) {
-            if(!is_file($sitePath.$prefix.$uri)) {
-                return $sitePath.$prefix.$uri.'/index.php';
-            }
-            return $sitePath.$prefix.$uri;
-        }
+		$options = [
+			'/app/wp-',
+			'/wp-',
+		];
 
-        if(strpos($uri, '/wp-') !== false) {
-            if(!is_file($sitePath.$prefix.$uri)) {
-                return $sitePath.$prefix.$uri.'/index.php';
-            }
-            return $sitePath.$prefix.$uri;
-        }
-
+		foreach($options as $key) {
+	        if(strpos($uri, $key) !== false) {
+	            if(!is_file($sitePath.$prefix.$uri)) {
+	                return $sitePath.$prefix.$uri.'/index.php';
+	            }
+	            return $sitePath.$prefix.$uri;
+	        }
+		}
+		
         return $sitePath.$prefix.'/index.php';
     }
     //IMPORTANT: Wordpress usually lives in public_html instead of public.

@@ -31,20 +31,17 @@ class SampleValetDriver extends ValetDriver
      */
     public function isStaticFile($sitePath, $siteName, $uri)
     {
-
         $options = [
             '/public/',
             '/public_html/',
             '/app/',
             '',
         ];
-
         foreach($options as $key) {
             if (file_exists($staticFilePath = $sitePath.$key.$uri)) {
                 return $staticFilePath;
             }            
         }
-
         return false;
     }
 
@@ -61,14 +58,14 @@ class SampleValetDriver extends ValetDriver
         $paths = [
             '/public/',
             '/public_html/',
+	        '/app/',
+	        '',
         ];
-
         foreach($paths as $key) {
-            if(file_exists($sitePath.$key)) {
-                return $sitePath.$key.'index.php';
+            if(file_exists($indexPath = $sitePath.$key.'index.php')) {
+                return $indexPath;
             }            
         }
-
-        return $sitePath.'/index.php';
+        return false;
     }
 }
