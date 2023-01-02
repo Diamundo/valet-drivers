@@ -37,8 +37,9 @@ class SampleValetDriver extends ValetDriver
             '/app/',
             '',
         ];
-        foreach($options as $key) {
-            if (file_exists($staticFilePath = $sitePath.$key.$uri)) {
+        
+		foreach($options as $key) {
+            if (file_exists($staticFilePath = $sitePath.$key.$uri) && !is_dir($staticFilePath)) {
                 return $staticFilePath;
             }            
         }
@@ -61,8 +62,16 @@ class SampleValetDriver extends ValetDriver
 	        '/app/',
 	        '',
         ];
+		
+		if(!strpos($uri, '.php')) {
+			if(!strpos($uri, 'wp-admin')) {
+				$uri = '';
+			}
+			$uri .= '/index.php';
+		}
+		
         foreach($paths as $key) {
-            if(file_exists($indexPath = $sitePath.$key.'index.php')) {
+            if(file_exists($indexPath = $sitePath.$key.$uri)) {
                 return $indexPath;
             }            
         }
