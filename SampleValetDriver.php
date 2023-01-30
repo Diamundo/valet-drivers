@@ -4,6 +4,15 @@ use Valet\Drivers\ValetDriver;
 
 class SampleValetDriver extends ValetDriver
 {
+	
+	private $folders = [
+		'/public/',
+		'/public_html/',
+		'/app/',
+		'/public_html/app/',
+		'',
+	];
+	
     /**
      * Determine if the driver serves the request.
      *
@@ -31,14 +40,7 @@ class SampleValetDriver extends ValetDriver
      */
     public function isStaticFile($sitePath, $siteName, $uri)
     {
-        $options = [
-            '/public/',
-            '/public_html/',
-            '/app/',
-            '',
-        ];
-        
-		foreach($options as $key) {
+		foreach($this->folders as $key) {
             if (file_exists($staticFilePath = $sitePath.$key.$uri) && !is_dir($staticFilePath)) {
                 return $staticFilePath;
             }            
@@ -56,13 +58,7 @@ class SampleValetDriver extends ValetDriver
      */
     public function frontControllerPath($sitePath, $siteName, $uri)
     {
-        $paths = [
-            '/public/',
-            '/public_html/',
-	        '/app/',
-	        '',
-        ];
-		
+
 		if(!strpos($uri, '.php')) {
 			if(!strpos($uri, 'wp-admin')) {
 				$uri = '';
@@ -70,10 +66,10 @@ class SampleValetDriver extends ValetDriver
 			$uri .= '/index.php';
 		}
 		
-        foreach($paths as $key) {
+        foreach($this->folders as $key) {
             if(file_exists($indexPath = $sitePath.$key.$uri)) {
                 return $indexPath;
-            }            
+            }
         }
         return false;
     }
